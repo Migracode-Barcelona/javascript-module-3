@@ -1,4 +1,4 @@
-# JavaScript-Module-3
+# Rick and Morty
 
 In this project you must create your own website for the famous television series Rick and Morty.
 
