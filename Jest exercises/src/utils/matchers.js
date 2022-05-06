@@ -3,7 +3,7 @@ export function multiplyNums(nums = []) {
 }
 
 export function sanitizeUserData(user) {
-  const { password, role, ...rest } = user;
+  const { password, role, ...rest } = user; // SPREAD operator
 
   return rest;
 }
