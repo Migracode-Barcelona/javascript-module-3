@@ -20,9 +20,9 @@ rootDiv.appendChild(titleDivRow)
 const contentDivRow = document.createElement('div')
 contentDivRow.classList.add('row', 'mt-3')
 const contentBodyDivCol = document.createElement('div')
-contentBodyDivCol.classList.add('col-9')
+contentBodyDivCol.classList.add('col-8')
 const contentSidebarDivCol = document.createElement('div')
-contentSidebarDivCol.classList.add('col-3')
+contentSidebarDivCol.classList.add('col-4')
 contentDivRow.appendChild(contentBodyDivCol)
 rootDiv.appendChild(contentDivRow)
 
@@ -33,16 +33,16 @@ projectTitle.innerText = "Rick and Morty"
 titleDiveCol.appendChild(projectTitle)
 
 
-const createNextBtn = () => {
+const createShowMoreBtn = () => {
     contentDivRow.appendChild(contentSidebarDivCol)
     //1.2.x Sidebar button
-    const nextPageBtn = document.createElement('button')
-    nextPageBtn.setAttribute('id', 'next-page-btn')
-    nextPageBtn.classList.add('btn-primary', 'btn')
-    nextPageBtn.innerText = "Next"
-    setTimeout(() => { contentSidebarDivCol.appendChild(nextPageBtn) }, 0.5 * 1000)
+    const showMorePageBtn = document.createElement('button')
+    showMorePageBtn.setAttribute('id', 'show-more-page-btn')
+    showMorePageBtn.classList.add('btn-primary', 'btn', 'mt-3')
+    showMorePageBtn.innerText = "Show More"
+    setTimeout(() => { contentSidebarDivCol.appendChild(showMorePageBtn) }, 0.5 * 1000)
 }
-createNextBtn()
+createShowMoreBtn()
 
 
 //1.2 Sidebar
@@ -89,28 +89,22 @@ const waitOneSecond = (doSomething) => {
     setTimeout(doSomething, 1 * 1000)
 }
 
-const setUpNextPageBtn = () => {
-    const nextPageBtn = document.querySelector('#next-page-btn')
-    console.log('nextpage!')
-    nextPageBtn.addEventListener('click', () => {
-        console.log('nextpage!')
+const setUpShowMorePageBtn = () => {
+    const showMorePageBtn = document.querySelector('#show-more-page-btn')
+    console.log('show morepage!')
+    showMorePageBtn.addEventListener('click', () => {
+        console.log('show more page!')
         page = page + 1
         console.log(page)
         if (page <= 3) {
-            waitOneSecond(setUpNextPageBtn)
+            waitOneSecond(setUpShowMorePageBtn)
             cleanList()
-            createNextBtn()
+            createShowMoreBtn()
             fetchEpisodesData(page)
         }
     })
 }
 
-waitOneSecond(setUpNextPageBtn)
-
-
-
-// fetch(characterUrl)
-//     .then(response => response.json())
-//     .then(data => console.log(data))
+waitOneSecond(setUpShowMorePageBtn)
 
 
