@@ -4,6 +4,7 @@ episodesUrl = "https://rickandmortyapi.com/api/episode"
 locationsUrl = "https://rickandmortyapi.com/api/location"
 
 
+
 // Step 1 create the web structure
 
 //1.0.1 bootstrap layout  title
@@ -32,16 +33,31 @@ projectTitle.innerText = "Rick and Morty"
 titleDiveCol.appendChild(projectTitle)
 
 
+const createNextBtn = () => {
+    contentDivRow.appendChild(contentSidebarDivCol)
+    //1.2.x Sidebar button
+    const nextPageBtn = document.createElement('button')
+    nextPageBtn.setAttribute('id', 'next-page-btn')
+    nextPageBtn.classList.add('btn-primary', 'btn')
+    nextPageBtn.innerText = "Next"
+    setTimeout(() => { contentSidebarDivCol.appendChild(nextPageBtn) }, 0.5 * 1000)
+}
+createNextBtn()
+
+
 //1.2 Sidebar
 let page = 1
 
-fetch(`${episodesUrl}?page=${page}`)
-    .then(response => response.json())
-    .then(data => {
-        console.log(data.results)
-        let episodes = data.results
-        displayEpisodes(episodes)
-    })
+const fetchEpisodesData = (page) => {
+    fetch(`${episodesUrl}?page=${page}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.results)
+            let episodes = data.results
+            displayEpisodes(episodes)
+        })
+}
+
 
 const displayEpisodes = (episodes) => {
     console.log(episodes)
@@ -59,12 +75,30 @@ const displayEpisodes = (episodes) => {
     contentSidebarDivCol.appendChild(episodesUl)
 }
 
-contentDivRow.appendChild(contentSidebarDivCol)
-//1.2.x Sidebar button
-const nextPageBtn = document.createElement('button')
-nextPageBtn.classList.add('btn-primary', 'btn')
-nextPageBtn.innerText = "Next"
-setTimeout(() => { contentSidebarDivCol.appendChild(nextPageBtn) }, 2 * 1000)
+
+fetchEpisodesData(1)
+
+
+const cleanList = () => {
+    contentSidebarDivCol.innerHTML = ''
+}
+const waitOneSecond = (doSomething) => {
+    setTimeout(doSomething, 1 * 1000)
+}
+const setUpNextPageBtn = () => {
+    const nextPageBtn = document.querySelector('#next-page-btn')
+    console.log('nextpage!')
+    console.log(nextPageBtn)
+    nextPageBtn.addEventListener('click', () => {
+        console.log('nextpage!')
+        page = page + 1
+        cleanList()
+        createNextBtn()
+        fetchEpisodesData(page)
+
+    })
+}
+waitOneSecond(setUpNextPageBtn)
 
 
 
