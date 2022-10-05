@@ -23,7 +23,6 @@ contentBodyDivCol.classList.add('col-9')
 const contentSidebarDivCol = document.createElement('div')
 contentSidebarDivCol.classList.add('col-3')
 contentDivRow.appendChild(contentBodyDivCol)
-contentDivRow.appendChild(contentSidebarDivCol)
 rootDiv.appendChild(contentDivRow)
 
 // 1.1 Project tile
@@ -34,17 +33,39 @@ titleDiveCol.appendChild(projectTitle)
 
 
 //1.2 Sidebar
+let page = 1
 
-fetch(episodesUrl)
+fetch(`${episodesUrl}?page=${page}`)
     .then(response => response.json())
-    .then(data => console.log(data))
+    .then(data => {
+        console.log(data.results)
+        let episodes = data.results
+        displayEpisodes(episodes)
+    })
 
+const displayEpisodes = (episodes) => {
+    console.log(episodes)
+    //create html list elements
+    const episodesUl = document.createElement('ul')
+    episodesUl.classList.add('list-group')
 
+    episodes.forEach(episode => {
+        const episodeLi = document.createElement('li')
+        episodeLi.classList.add('list-group-item')
+        episodeLi.innerText = `Episode: ${episode.episode}:${episode.name}`
+        episodesUl.appendChild(episodeLi)
+
+    })
+    contentSidebarDivCol.appendChild(episodesUl)
+}
+
+contentDivRow.appendChild(contentSidebarDivCol)
 //1.2.x Sidebar button
 const nextPageBtn = document.createElement('button')
 nextPageBtn.classList.add('btn-primary', 'btn')
 nextPageBtn.innerText = "Next"
-contentSidebarDivCol.appendChild(nextPageBtn)
+setTimeout(() => { contentSidebarDivCol.appendChild(nextPageBtn) }, 2 * 1000)
+
 
 
 // fetch(characterUrl)
