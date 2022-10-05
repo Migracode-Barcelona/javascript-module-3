@@ -96,10 +96,10 @@ const setUpShowMorePageBtn = () => {
         console.log('show more page!')
         page = page + 1
         console.log(page)
+
         if (page <= 3) {
             waitOneSecond(setUpShowMorePageBtn)
-            cleanList()
-            createShowMoreBtn()
+            // cleanList()
             fetchEpisodesData(page)
         }
     })
