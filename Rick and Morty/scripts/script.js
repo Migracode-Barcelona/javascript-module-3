@@ -49,18 +49,20 @@ createNextBtn()
 let page = 1
 
 const fetchEpisodesData = (page) => {
-    fetch(`${episodesUrl}?page=${page}`)
-        .then(response => response.json())
-        .then(data => {
-            console.log(data.results)
-            let episodes = data.results
-            displayEpisodes(episodes)
-        })
+    if (page <= 3) {
+        fetch(`${episodesUrl}?page=${page}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.results)
+                let episodes = data.results
+                displayEpisodes(episodes)
+            })
+    }
+
 }
 
 
 const displayEpisodes = (episodes) => {
-    console.log(episodes)
     //create html list elements
     const episodesUl = document.createElement('ul')
     episodesUl.classList.add('list-group')
@@ -75,29 +77,34 @@ const displayEpisodes = (episodes) => {
     contentSidebarDivCol.appendChild(episodesUl)
 }
 
-
+//load the first page 
 fetchEpisodesData(1)
 
 
 const cleanList = () => {
     contentSidebarDivCol.innerHTML = ''
 }
+
 const waitOneSecond = (doSomething) => {
     setTimeout(doSomething, 1 * 1000)
 }
+
 const setUpNextPageBtn = () => {
     const nextPageBtn = document.querySelector('#next-page-btn')
     console.log('nextpage!')
-    console.log(nextPageBtn)
     nextPageBtn.addEventListener('click', () => {
         console.log('nextpage!')
         page = page + 1
-        cleanList()
-        createNextBtn()
-        fetchEpisodesData(page)
-
+        console.log(page)
+        if (page <= 3) {
+            waitOneSecond(setUpNextPageBtn)
+            cleanList()
+            createNextBtn()
+            fetchEpisodesData(page)
+        }
     })
 }
+
 waitOneSecond(setUpNextPageBtn)
 
 
