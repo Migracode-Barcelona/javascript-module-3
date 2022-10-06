@@ -7,8 +7,11 @@ const h1Header = document.createElement("h1");
 h1Header.innerText = "Rick and Morty API";
 const h2Header = document.createElement("h2");
 h2Header.innerText = "by Amanda Maria";
+const imageHeader = document.createElement("img");
+imageHeader.src = "images/imageName.png";
 headerDiv.appendChild(h1Header);
 headerDiv.appendChild(h2Header);
+headerDiv.appendChild(imageHeader);
 rootDiv.appendChild(headerDiv);
 
 //DIV BIGCONTAINER
@@ -32,7 +35,9 @@ function sidebar(){
             json => {
                 console.log(json.results);
                 json.results.forEach(episode => {
+                    // const aTag = document.createElement('a');
                     const episodesTitle = document.createElement('p');
+                    // aTag.appendChild(episodesTitle);
                     episodesTitle.innerText = `Episode ${episode.id}`;
                     sidebarDiv.appendChild(episodesTitle);
                     episodesTitle.addEventListener("click", event => {
@@ -48,13 +53,13 @@ const mainContainer = document.createElement("div");
 mainContainer.classList.add("main-cointainer");
 bigContainer.appendChild(mainContainer);
 
-//Create Div to show Episode's data
-const episodeDiv = document.createElement("div");
-episodeDiv.classList.add("episode-div");
-
 function createCard(name, date, code, charactersURLs){
+    console.log('clickado')
     // Clear main container
     mainContainer.innerHTML = " ";
+
+    const episodeDiv = document.createElement("div");
+    episodeDiv.classList.add("episode-div");
 
     //Episode's name
     const nameEp = document.createElement("h2");
@@ -66,17 +71,18 @@ function createCard(name, date, code, charactersURLs){
     dateEp.innerText = `${date} | ${code}`;
     episodeDiv.appendChild(dateEp);
 
-    renderCharacters(charactersURLs);
-
-    mainContainer.appendChild(episodeDiv);
-     
-}
-
-function renderCharacters() {
     //Create Div for cards
     const cardsDiv = document.createElement("div");
     cardsDiv.classList.add('cards-div')
     episodeDiv.appendChild(cardsDiv);
+
+    renderCharacters(charactersURLs);
+
+    mainContainer.appendChild(episodeDiv);
+}
+
+function renderCharacters() {
+
     fetch('https://rickandmortyapi.com/api/character')
         .then(result => {
             return result.json();
@@ -100,7 +106,7 @@ function renderCharacters() {
                         specieStatusCharacter.innerText = `${character.species} | ${character.status}`;
                         containerCharacter.appendChild(specieStatusCharacter);
 
-                        cardsDiv.appendChild(containerCharacter);
+                        document.querySelector('.cards-div').appendChild(containerCharacter);
                     })
         })
 }
