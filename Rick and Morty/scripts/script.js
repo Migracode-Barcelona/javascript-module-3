@@ -81,34 +81,31 @@ function createCard(name, date, code, charactersURLs){
     mainContainer.appendChild(episodeDiv);
 }
 
-function renderCharacters() {
-
-    fetch('https://rickandmortyapi.com/api/character')
+function renderCharacters(charactersURLs) {
+    charactersURLs.forEach( characterURL => {
+        fetch(characterURL)
         .then(result => {
-            return result.json();
+            return result.json()
         })
-        .then(
-            json => {
-                json.results.forEach(
-                    character => {
-                        const containerCharacter = document.createElement("div");
-                        containerCharacter.classList.add("containerCharacter");
+        .then(character => {
+            const containerCharacter = document.createElement("div");
+            containerCharacter.classList.add("containerCharacter");
 
-                        const imageCharacter = document.createElement("img");
-                        imageCharacter.src = character.image;
-                        containerCharacter.appendChild(imageCharacter);
+            const imageCharacter = document.createElement("img");
+            imageCharacter.src = character.image;
+            containerCharacter.appendChild(imageCharacter);
 
-                        const nameCharacter = document.createElement("p");
-                        nameCharacter.innerText = character.name;
-                        containerCharacter.appendChild(nameCharacter);
+            const nameCharacter = document.createElement("p");
+            nameCharacter.innerText = character.name;
+            containerCharacter.appendChild(nameCharacter);
 
-                        const specieStatusCharacter = document.createElement('p');
-                        specieStatusCharacter.innerText = `${character.species} | ${character.status}`;
-                        containerCharacter.appendChild(specieStatusCharacter);
+            const specieStatusCharacter = document.createElement('p');
+            specieStatusCharacter.innerText = `${character.species} | ${character.status}`;
+            containerCharacter.appendChild(specieStatusCharacter);
 
-                        document.querySelector('.cards-div').appendChild(containerCharacter);
-                    })
+            document.querySelector('.cards-div').appendChild(containerCharacter);
         })
+    })
 }
 
 
