@@ -40,18 +40,18 @@ body {
 
 .main-cointainer {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     background-color: rgb(113, 150, 122);
     width: 90%;
     text-align: center;
 }
 
-.episode-div {
-    /* display: flex;
+/* .episode-div {
+    display: flex;
     flex-direction: column;
     width: 100%;
-    text-align: center; */
-}
+    text-align: center;
+} */
 
 .div-all-characters{
     display: flex;
@@ -76,4 +76,8 @@ body {
     align-items: center;
     align-content: center;
     justify-content: center;
+}
+
+hr {
+    border: 5px solid greenyellow;
 }

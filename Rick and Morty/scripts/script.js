@@ -104,9 +104,90 @@ function renderCharacters(charactersURLs) {
             containerCharacter.appendChild(specieStatusCharacter);
 
             document.querySelector('.cards-div').appendChild(containerCharacter);
+
+            imageCharacter.addEventListener("click", event => {
+                createListEpisodes(character.episode)
+            })
         })
     })
 }
+
+function renderCharacters(charactersURLs) {
+    charactersURLs.forEach( characterURL => {
+        fetch(characterURL)
+        .then(result => {
+            return result.json()
+        })
+        .then(character => {
+            const containerCharacter = document.createElement("div");
+            containerCharacter.classList.add("containerCharacter");
+
+            const imageCharacter = document.createElement("img");
+            imageCharacter.classList.add("image-character");
+            imageCharacter.src = character.image;
+            containerCharacter.appendChild(imageCharacter);
+
+            const nameCharacter = document.createElement("p");
+            nameCharacter.innerText = character.name;
+            containerCharacter.appendChild(nameCharacter);
+
+            const specieStatusCharacter = document.createElement('p');
+            specieStatusCharacter.innerText = `${character.species} | ${character.status}`;
+            containerCharacter.appendChild(specieStatusCharacter);
+
+            document.querySelector('.cards-div').appendChild(containerCharacter);
+
+            imageCharacter.addEventListener("click", event => {
+                createCardCharacterInfo(character)
+            })
+        })
+    })
+}
+
+function createCardCharacterInfo(character) {
+    console.log("Create the info com character")
+    mainContainer.innerHTML = " ";
+    
+    const cardCharacterInfo = document.createElement('div');
+ 
+    const imageCharacter = document.createElement("img");
+    imageCharacter.src = character.image;
+
+    const nameCharacter = document.createElement("p");
+    nameCharacter.innerText = character.name;
+    cardCharacterInfo.appendChild(nameCharacter);
+
+    const specieStatusCharacter = document.createElement('p');
+    specieStatusCharacter.innerText = `${character.species} | ${character.status} | ${character.gender} | ${character.origin.name}`;
+    cardCharacterInfo.appendChild(specieStatusCharacter);
+
+    cardCharacterInfo.appendChild(imageCharacter);
+    mainContainer.appendChild(cardCharacterInfo);
+
+    mainContainer.appendChild(document.createElement('hr'));
+
+    const cardCharacterList = document.createElement('div');
+    mainContainer.appendChild(cardCharacterList);
+
+    character.episode.forEach( episodeURL => {
+        fetch(episodeURL)
+        .then(result => {
+            return result.json()
+        })
+        .then(episodeInfo => {
+                    const episodeId = document.createElement('h2');
+                    episodeId.innerText = `Episode ${episodeInfo.id}`;
+                    cardCharacterList.appendChild(episodeId);
+
+                    const episodeCode = document.createElement('p');
+                    episodeCode.innerText = episodeInfo.episode;
+                    cardCharacterList.appendChild(episodeCode);
+        })
+    })
+}
+
+
+
 
 
 
