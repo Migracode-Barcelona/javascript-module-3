@@ -21,26 +21,90 @@ const sidebarDiv = document.createElement("div");
 sidebarDiv.classList.add("sidebar");
 bigContainer.appendChild(sidebarDiv);
 
-const episode1 = document.createElement("h3");
-episode1.innerText = "Episode 1";
-const episode2 = document.createElement("h3");
-episode2.innerText = "Episode 2";
-const episode3 = document.createElement("h3");
-episode3.innerText = "Episode 3";
-const episode4 = document.createElement("h3");
-episode4.innerText = "Episode 4";
-const episode5 = document.createElement("h3");
-episode5.innerText = "Episode 5";
+const url = 'https://rickandmortyapi.com/api'
 
-sidebarDiv.appendChild(episode1);
-sidebarDiv.appendChild(episode2);
-sidebarDiv.appendChild(episode3);
-sidebarDiv.appendChild(episode4);
-sidebarDiv.appendChild(episode5);
+function sidebar(){
+    fetch('https://rickandmortyapi.com/api/episode')
+        .then(result => {
+            return result.json()
+        })
+        .then(
+            json => {
+                console.log(json.results);
+                json.results.forEach(episode => {
+                    const episodesTitle = document.createElement('p');
+                    episodesTitle.innerText = `Episode ${episode.id}`;
+                    sidebarDiv.appendChild(episodesTitle);
+                    episodesTitle.addEventListener("click", event => {
+                        createCard(episode.name, episode.air_date, episode.episode, episode.characters)
+                    })
+                });
+            });
+}
+sidebar();
 
 //MAIN CONTAINER
 const mainContainer = document.createElement("div");
 mainContainer.classList.add("main-cointainer");
 bigContainer.appendChild(mainContainer);
 
+//Create Div to show Episode's data
+const episodeDiv = document.createElement("div");
+episodeDiv.classList.add("episode-div");
 
+function createCard(name, date, code, charactersURLs){
+    // Clear main container
+    mainContainer.innerHTML = " ";
+
+    //Episode's name
+    const nameEp = document.createElement("h2");
+    nameEp.innerText = `Episode ${name}`;
+    episodeDiv.appendChild(nameEp);
+
+    //Episode's date and code
+    const dateEp = document.createElement("p");
+    dateEp.innerText = `${date} | ${code}`;
+    episodeDiv.appendChild(dateEp);
+
+    renderCharacters(charactersURLs);
+
+    mainContainer.appendChild(episodeDiv);
+     
+}
+
+function renderCharacters() {
+    //Create Div for cards
+    const cardsDiv = document.createElement("div");
+    cardsDiv.classList.add('cards-div')
+    episodeDiv.appendChild(cardsDiv);
+    fetch('https://rickandmortyapi.com/api/character')
+        .then(result => {
+            return result.json();
+        })
+        .then(
+            json => {
+                json.results.forEach(
+                    character => {
+                        const containerCharacter = document.createElement("div");
+                        containerCharacter.classList.add("containerCharacter");
+
+                        const imageCharacter = document.createElement("img");
+                        imageCharacter.src = character.image;
+                        containerCharacter.appendChild(imageCharacter);
+
+                        const nameCharacter = document.createElement("p");
+                        nameCharacter.innerText = character.name;
+                        containerCharacter.appendChild(nameCharacter);
+
+                        const specieStatusCharacter = document.createElement('p');
+                        specieStatusCharacter.innerText = `${character.species} | ${character.status}`;
+                        containerCharacter.appendChild(specieStatusCharacter);
+
+                        cardsDiv.appendChild(containerCharacter);
+                    })
+        })
+}
+
+
+
+ 

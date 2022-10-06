@@ -1,7 +1,12 @@
+body {
+    font-family: sans-serif;
+}
+
 .header {
     background-color: rgb(228, 235, 221);
     color: rgb(0, 40, 27);
-    text-align: center;
+    text-align:left;
+    padding: 20px;
 }
 
 .big-container {
@@ -16,10 +21,47 @@
     display: flex;
     flex-direction: column;
     background-color: rgb(93, 145, 107);
+    width: 10%;
+    font-weight: bolder;
+    text-align: center;
 }
 
 .main-cointainer {
     display: flex;
     flex-direction: row;
-    background-color: rgb(1, 29, 8);
+    background-color: rgb(113, 150, 122);
+    width: 90%;
+    text-align: center;
+}
+
+.episode-div {
+    /* display: flex;
+    flex-direction: column;
+    width: 100%;
+    text-align: center; */
+}
+
+.div-all-characters{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.containerCharacter {
+    text-align: center;
+    /* padding: 20%;
+    margin: 20%; */
+    width: 100%;
+}
+
+.containerCharacter > img {
+    margin: 50px;
+}
+
+.cards-div {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
 }
