@@ -103,9 +103,7 @@ const showEpisode = (episode) => {
     const episodeInfo = document.createElement('h6')
     episodeInfo.innerText = `Name:${episode.name} Airdate:${episode.air_date} Episode:${episode.episode}`
     contentBodyDivCol.appendChild(episodeInfo)
-    console.log(episode)
     let characters = episode.characters
-    console.log(characters)
     getCharacters(characters)
 }
 
@@ -119,6 +117,13 @@ const getCharacters = (characters) => {
 
 const showCharacter = (character) => {
     console.log(character)
+    const characterInfo = document.createElement('p')
+    characterInfo.innerText = `Name:${character.name} Status:${character.status} Specie${character.species} Gender:${character.gender} Origin:${character.origin.name}`
+    const characterImage = document.createElement('img')
+    characterImage.src = character.image
+    contentBodyDivCol.appendChild(characterInfo)
+    contentBodyDivCol.appendChild(characterImage)
+
 
 }
 //attach eventlistener to each li item
