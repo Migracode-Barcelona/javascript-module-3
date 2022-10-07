@@ -17,12 +17,17 @@ const rootDiv = document.getElementById("root")
 rootDiv.classList.add('container')
 rootDiv.appendChild(titleDivRow)
 //1.0.2 bootstrap layout sidebar and body
+
 const contentDivRow = document.createElement('div')
 contentDivRow.classList.add('row', 'mt-3')
+
+const contentSidebarDivCol = document.createElement('div')
+contentSidebarDivCol.classList.add('col-4', 'position-relative')
+
 const contentBodyDivCol = document.createElement('div')
 contentBodyDivCol.classList.add('col-8')
-const contentSidebarDivCol = document.createElement('div')
-contentSidebarDivCol.classList.add('col-4')
+
+contentDivRow.appendChild(contentSidebarDivCol)
 contentDivRow.appendChild(contentBodyDivCol)
 rootDiv.appendChild(contentDivRow)
 
@@ -38,8 +43,8 @@ const createShowMoreBtn = () => {
     //1.2.x Sidebar button
     const showMorePageBtn = document.createElement('button')
     showMorePageBtn.setAttribute('id', 'show-more-page-btn')
-    showMorePageBtn.classList.add('btn-primary', 'btn', 'mt-3')
-    showMorePageBtn.innerText = "Show More"
+    showMorePageBtn.classList.add('btn-dark', 'btn', 'mt-3', 'position-absolute', 'bottom-0', 'end-0')
+    showMorePageBtn.innerText = "Load Episodes"
     setTimeout(() => { contentSidebarDivCol.appendChild(showMorePageBtn) }, 0.5 * 1000)
 }
 createShowMoreBtn()
@@ -71,6 +76,7 @@ const displayEpisodes = (episodes) => {
         const episodeLi = document.createElement('li')
         episodeLi.classList.add('list-group-item', 'episode-item')
         const episodeLiLink = document.createElement('a')
+        episodeLiLink.classList.add('link-dark')
         episodeLiLink.innerText = `Episode: ${episode.episode}:${episode.name}`
         episodeLiLink.setAttribute('id', `episode-${episode.id}`)
         episodeLiLink.setAttribute('url', `${episode.url}`)
@@ -117,12 +123,58 @@ const getCharacters = (characters) => {
 
 const showCharacter = (character) => {
     console.log(character)
-    const characterInfo = document.createElement('p')
-    characterInfo.innerText = `Name:${character.name} Status:${character.status} Specie${character.species} Gender:${character.gender} Origin:${character.origin.name}`
-    const characterImage = document.createElement('img')
-    characterImage.src = character.image
-    contentBodyDivCol.appendChild(characterInfo)
-    contentBodyDivCol.appendChild(characterImage)
+    // Set up bootstrap card layout
+
+    //card div
+    const cardDiv = document.createElement('div')
+    cardDiv.classList.add('card', 'mb-3')
+    cardDiv.setAttribute('style', 'max-width: 540px;')
+
+    //card title div with image
+    const cardTitleRow = document.createElement('div')
+    cardTitleRow.classList.add('row', 'g-0', 'pb-2')
+    const cardTitleImageCol = document.createElement('div')
+    cardTitleImageCol.classList.add('col-4')
+    const cardTitleImage = document.createElement('img')
+    cardTitleImage.classList.add('img-fluid', 'p-3')
+
+    //show character img
+    cardTitleImage.src = character.image
+
+    cardTitleImageCol.appendChild(cardTitleImage)
+
+    const cardTitleInfoCol = document.createElement('div')
+    cardTitleInfoCol.classList.add('col-8')
+    const cardTitleInfoBody = document.createElement('div')
+    cardTitleInfoBody.classList.add('card-body')
+    const cardBodyTitle = document.createElement('h5')
+    cardBodyTitle.classList.add('card-title')
+
+    //show character name
+    cardBodyTitle.innerText = character.name
+
+    const cardBodyContent = document.createElement('p')
+    cardBodyContent.classList.add('card-text', 'text-muted', 'fw-sm')
+
+    //show character info
+    cardBodyContent.innerText = `${character.status} | ${character.species} | ${character.gender} | ${character.origin.name}`
+
+    cardTitleInfoBody.appendChild(cardBodyTitle)
+    cardTitleInfoBody.appendChild(cardBodyContent)
+    cardTitleInfoCol.appendChild(cardTitleInfoBody)
+
+    cardTitleRow.appendChild(cardTitleImageCol)
+    cardTitleRow.appendChild(cardTitleInfoCol)
+
+
+    //card episode info row div
+    const cardEpisodesRow = document.createElement('div')
+    cardEpisodesRow.classList.add('row', 'mx-3', 'border-top', 'pt-3', 'text-center')
+
+    cardDiv.appendChild(cardTitleRow)
+    cardDiv.appendChild(cardEpisodesRow)
+
+    contentBodyDivCol.appendChild(cardDiv)
 
 
 }
