@@ -69,13 +69,59 @@ const displayEpisodes = (episodes) => {
 
     episodes.forEach(episode => {
         const episodeLi = document.createElement('li')
-        episodeLi.classList.add('list-group-item')
-        episodeLi.innerText = `Episode: ${episode.episode}:${episode.name}`
-        episodesUl.appendChild(episodeLi)
+        episodeLi.classList.add('list-group-item', 'episode-item')
+        const episodeLiLink = document.createElement('a')
+        episodeLiLink.innerText = `Episode: ${episode.episode}:${episode.name}`
+        episodeLiLink.setAttribute('id', `episode-${episode.id}`)
+        episodeLiLink.setAttribute('url', `${episode.url}`)
 
+        episodeLiLink.setAttribute('href', '#')
+        episodeLi.appendChild(episodeLiLink)
+        episodesUl.appendChild(episodeLi)
+        //add eventlistner to each list item
+        episodeLiLink.addEventListener('click', (e) => {
+            let episodeUrl = e.target.getAttribute('url')
+
+            console.log(episodeUrl)
+            getEpisode(episodeUrl)
+        })
     })
     contentSidebarDivCol.appendChild(episodesUl)
+
 }
+
+const getEpisode = (episodeUrl) => {
+    fetch(episodeUrl)
+        .then(response => response.json())
+        .then(episode => {
+            showEpisode(episode)
+        })
+
+}
+
+const showEpisode = (episode) => {
+    const episodeInfo = document.createElement('h6')
+    episodeInfo.innerText = `Name:${episode.name} Airdate:${episode.air_date} Episode:${episode.episode}`
+    contentBodyDivCol.appendChild(episodeInfo)
+    console.log(episode)
+    let characters = episode.characters
+    console.log(characters)
+    getCharacters(characters)
+}
+
+const getCharacters = (characters) => {
+    characters.forEach(character => {
+        fetch(character)
+            .then(response => response.json())
+            .then(character => showCharacter(character))
+    })
+}
+
+const showCharacter = (character) => {
+    console.log(character)
+
+}
+//attach eventlistener to each li item
 
 //load the first page 
 fetchEpisodesData(1)
