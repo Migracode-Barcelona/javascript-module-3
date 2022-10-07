@@ -106,9 +106,14 @@ const getEpisode = (episodeUrl) => {
 }
 
 const showEpisode = (episode) => {
-    const episodeInfo = document.createElement('h6')
-    episodeInfo.innerText = `Name:${episode.name} Airdate:${episode.air_date} Episode:${episode.episode}`
+    const episodeInfo = document.createElement('h5')
+    episodeInfo.classList.add('py-2')
+    episodeInfo.innerText = `${episode.name} `
+    const episodeInfoBody = document.createElement('p')
+    episodeInfoBody.classList.add('text-muted', 'fw-light', 'py-2')
+    episodeInfoBody.innerText = `${episode.air_date} | ${episode.episode}`
     contentBodyDivCol.appendChild(episodeInfo)
+    contentBodyDivCol.appendChild(episodeInfoBody)
     let characters = episode.characters
     getCharacters(characters)
 }
@@ -122,13 +127,12 @@ const getCharacters = (characters) => {
 }
 
 const showCharacter = (character) => {
-    console.log(character)
+    console.log(character.episode)
     // Set up bootstrap card layout
 
     //card div
     const cardDiv = document.createElement('div')
     cardDiv.classList.add('card', 'mb-3')
-    cardDiv.setAttribute('style', 'max-width: 540px;')
 
     //card title div with image
     const cardTitleRow = document.createElement('div')
@@ -175,10 +179,29 @@ const showCharacter = (character) => {
     cardDiv.appendChild(cardEpisodesRow)
 
     contentBodyDivCol.appendChild(cardDiv)
+    console.log(character)
 
+    //Show character episodes
+    character.episode.forEach(episode => {
+        const episodeCol = document.createElement('div')
+        episodeCol.classList.add('col-3', 'pt-3')
+        const episodeName = document.createElement('h6')
+        const episodeNumber = document.createElement('div')
+        fetch(episode)
+            .then(response => response.json())
+            .then(data => {
+                episodeName.innerText = data.name
+                episodeNumber.innerText = data.episode
+            })
+        episodeCol.appendChild(episodeName)
+        episodeCol.appendChild(episodeNumber)
 
+        cardEpisodesRow.appendChild(episodeCol)
+    })
 }
-//attach eventlistener to each li item
+
+
+
 
 //load the first page 
 fetchEpisodesData(1)
