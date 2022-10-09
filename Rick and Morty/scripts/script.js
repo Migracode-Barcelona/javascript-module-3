@@ -31,12 +31,6 @@ contentDivRow.appendChild(contentSidebarDivCol)
 contentDivRow.appendChild(contentBodyDivCol)
 rootDiv.appendChild(contentDivRow)
 
-// 1.1 Project tile
-const projectTitle = document.createElement('h1')
-projectTitle.innerText = "Rick and Morty"
-
-titleDiveCol.appendChild(projectTitle)
-
 
 const createShowMoreBtn = () => {
     contentDivRow.appendChild(contentSidebarDivCol)
@@ -219,9 +213,9 @@ const showCharacter = (characterId) => {
             //Add link to character origin
             const characterOriginLink = document.createElement('a')
             characterOriginLink.href = "#"
-            characterOriginLink.classList.add('link-secondary')
+            characterOriginLink.classList.add('link-info')
             const cardBodyContentOrigin = document.createElement('p')
-            cardBodyContentOrigin.classList.add('card-text', 'text-muted', 'fw-normal', 'py-2')
+            cardBodyContentOrigin.classList.add('card-text', 'fw-normal', 'py-2')
             cardBodyContentOrigin.setAttribute('url', character.origin.url)
             cardBodyContentOrigin.innerText = `Origin:${character.origin.name}`
             characterOriginLink.appendChild(cardBodyContentOrigin)
