@@ -115,89 +115,146 @@ const showEpisode = (episode) => {
     contentBodyDivCol.appendChild(episodeInfo)
     contentBodyDivCol.appendChild(episodeInfoBody)
     let characters = episode.characters
-    getCharacters(characters)
+    showEpisodeCharacters(characters)
 }
 
-const getCharacters = (characters) => {
+
+
+const showEpisodeCharacters = (characters) => {
+    //Setup bootstrap card layout
+    const cardRow = document.createElement('div')
+    cardRow.classList.add('row', 'mt-2')
+
     characters.forEach(character => {
         fetch(character)
             .then(response => response.json())
-            .then(character => showCharacter(character))
+            .then(character => {
+                console.log(character)
+                const cardCol = document.createElement('div')
+                cardCol.classList.add('col-3')
+                const cardLink = document.createElement('a')
+                cardLink.href = "#"
+                const card = document.createElement('div')
+                card.classList.add('card')
+                const image = document.createElement('img')
+                const cardBody = document.createElement('div')
+                cardBody.classList.add('card-body')
+                const cardTitle = document.createElement('h5')
+                cardTitle.classList.add('card-title')
+                cardTitle.setAttribute('id', `${character.id}`)
+                const cardText = document.createElement('p')
+                cardText.classList.add('card-text', 'text-muted', 'fw-light', 'py-2')
+
+                //populate card with character info
+                image.src = character.image
+                cardTitle.innerText = character.name
+                cardText.innerText = `${character.status} | ${character.species}`
+
+                //Append elements
+                cardLink.appendChild(cardTitle)
+                cardBody.appendChild(cardLink)
+                cardBody.appendChild(cardText)
+
+                card.appendChild(image)
+                card.appendChild(cardBody)
+
+                cardCol.appendChild(card)
+
+                cardRow.appendChild(cardCol)
+
+                //Add eventlistener to the card
+                cardLink.addEventListener('click', (e) => {
+                    console.log(e.target.id)
+                    showCharacter(e.target.id)
+                })
+            })
     })
+    contentBodyDivCol.appendChild(cardRow)
 }
 
-const showCharacter = (character) => {
-    console.log(character.episode)
-    // Set up bootstrap card layout
+const showCharacter = (characterId) => {
+    //clear the main div
+    contentBodyDivCol.innerHTML = ""
 
-    //card div
-    const cardDiv = document.createElement('div')
-    cardDiv.classList.add('card', 'mb-3')
+    const thisCharacterUrl = `${characterUrl}/${characterId}`
 
-    //card title div with image
-    const cardTitleRow = document.createElement('div')
-    cardTitleRow.classList.add('row', 'g-0', 'pb-2')
-    const cardTitleImageCol = document.createElement('div')
-    cardTitleImageCol.classList.add('col-4')
-    const cardTitleImage = document.createElement('img')
-    cardTitleImage.classList.add('img-fluid', 'p-3')
-
-    //show character img
-    cardTitleImage.src = character.image
-
-    cardTitleImageCol.appendChild(cardTitleImage)
-
-    const cardTitleInfoCol = document.createElement('div')
-    cardTitleInfoCol.classList.add('col-8')
-    const cardTitleInfoBody = document.createElement('div')
-    cardTitleInfoBody.classList.add('card-body')
-    const cardBodyTitle = document.createElement('h5')
-    cardBodyTitle.classList.add('card-title')
-
-    //show character name
-    cardBodyTitle.innerText = character.name
-
-    const cardBodyContent = document.createElement('p')
-    cardBodyContent.classList.add('card-text', 'text-muted', 'fw-sm')
-
-    //show character info
-    cardBodyContent.innerText = `${character.status} | ${character.species} | ${character.gender} | ${character.origin.name}`
-
-    cardTitleInfoBody.appendChild(cardBodyTitle)
-    cardTitleInfoBody.appendChild(cardBodyContent)
-    cardTitleInfoCol.appendChild(cardTitleInfoBody)
-
-    cardTitleRow.appendChild(cardTitleImageCol)
-    cardTitleRow.appendChild(cardTitleInfoCol)
+    //fetch the charater
+    fetch(thisCharacterUrl)
+        .then(response => response.json())
+        .then(character => {
 
 
-    //card episode info row div
-    const cardEpisodesRow = document.createElement('div')
-    cardEpisodesRow.classList.add('row', 'mx-3', 'border-top', 'pt-3', 'text-center')
+            // Set up bootstrap card layout
 
-    cardDiv.appendChild(cardTitleRow)
-    cardDiv.appendChild(cardEpisodesRow)
+            //card div
+            const cardDiv = document.createElement('div')
+            cardDiv.classList.add('card', 'mb-3')
 
-    contentBodyDivCol.appendChild(cardDiv)
-    console.log(character)
+            //card title div with image
+            const cardTitleRow = document.createElement('div')
+            cardTitleRow.classList.add('row', 'g-0', 'pb-2')
+            const cardTitleImageCol = document.createElement('div')
+            cardTitleImageCol.classList.add('col-4')
+            const cardTitleImage = document.createElement('img')
+            cardTitleImage.classList.add('img-fluid', 'p-3')
 
-    //Show character episodes
-    character.episode.forEach(episode => {
-        const episodeCol = document.createElement('div')
-        episodeCol.classList.add('col-3', 'pt-3')
-        const episodeName = document.createElement('h6')
-        const episodeNumber = document.createElement('div')
-        fetch(episode)
-            .then(response => response.json())
-            .then(data => {
-                episodeName.innerText = data.name
-                episodeNumber.innerText = data.episode
+            //show character img
+            cardTitleImage.src = character.image
+
+            cardTitleImageCol.appendChild(cardTitleImage)
+
+            const cardTitleInfoCol = document.createElement('div')
+            cardTitleInfoCol.classList.add('col-8')
+            const cardTitleInfoBody = document.createElement('div')
+            cardTitleInfoBody.classList.add('card-body')
+            const cardBodyTitle = document.createElement('h5')
+            cardBodyTitle.classList.add('card-title')
+
+            //show character name
+            cardBodyTitle.innerText = character.name
+
+            const cardBodyContent = document.createElement('p')
+            cardBodyContent.classList.add('card-text', 'text-muted', 'fw-sm')
+
+            //show character info
+            cardBodyContent.innerText = `${character.status} | ${character.species} | ${character.gender} | ${character.origin.name}`
+
+            cardTitleInfoBody.appendChild(cardBodyTitle)
+            cardTitleInfoBody.appendChild(cardBodyContent)
+            cardTitleInfoCol.appendChild(cardTitleInfoBody)
+
+            cardTitleRow.appendChild(cardTitleImageCol)
+            cardTitleRow.appendChild(cardTitleInfoCol)
+
+
+            //card episode info row div
+            const cardEpisodesRow = document.createElement('div')
+            cardEpisodesRow.classList.add('row', 'mx-3', 'border-top', 'pt-3', 'text-center')
+
+            cardDiv.appendChild(cardTitleRow)
+            cardDiv.appendChild(cardEpisodesRow)
+
+            contentBodyDivCol.appendChild(cardDiv)
+            console.log(character)
+
+            //Show character episodes
+            character.episode.forEach(episode => {
+                const episodeCol = document.createElement('div')
+                episodeCol.classList.add('col-3', 'pt-3')
+                const episodeName = document.createElement('h6')
+                const episodeNumber = document.createElement('div')
+                fetch(episode)
+                    .then(response => response.json())
+                    .then(data => {
+                        episodeName.innerText = data.name
+                        episodeNumber.innerText = data.episode
+                    })
+                episodeCol.appendChild(episodeName)
+                episodeCol.appendChild(episodeNumber)
+
+                cardEpisodesRow.appendChild(episodeCol)
             })
-        episodeCol.appendChild(episodeName)
-        episodeCol.appendChild(episodeNumber)
-
-        cardEpisodesRow.appendChild(episodeCol)
-    })
+        })
 }
 
 
