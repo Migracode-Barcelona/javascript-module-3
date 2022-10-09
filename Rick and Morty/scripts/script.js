@@ -243,7 +243,11 @@ const showCharacter = (characterId) => {
             character.episode.forEach(episode => {
                 const episodeCol = document.createElement('div')
                 episodeCol.classList.add('col-3', 'pt-3')
+                const episodelink = document.createElement('a')
+                episodelink.href = "#"
                 const episodeName = document.createElement('h6')
+                episodeName.setAttribute('url', episode)
+                episodelink.appendChild(episodeName)
                 const episodeNumber = document.createElement('div')
                 fetch(episode)
                     .then(response => response.json())
@@ -251,8 +255,15 @@ const showCharacter = (characterId) => {
                         episodeName.innerText = data.name
                         episodeNumber.innerText = data.episode
                     })
-                episodeCol.appendChild(episodeName)
+
+                episodeCol.appendChild(episodelink)
                 episodeCol.appendChild(episodeNumber)
+
+                //add EventListener to each episode
+                episodelink.addEventListener('click', (e) => {
+                    const thisEpisodeUrl = e.target.getAttribute('url')
+                    getEpisode(thisEpisodeUrl)
+                })
 
                 cardEpisodesRow.appendChild(episodeCol)
             })
