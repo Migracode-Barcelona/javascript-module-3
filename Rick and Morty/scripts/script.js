@@ -43,7 +43,7 @@ const createShowMoreBtn = () => {
     //1.2.x Sidebar button
     const showMorePageBtn = document.createElement('button')
     showMorePageBtn.setAttribute('id', 'show-more-page-btn')
-    showMorePageBtn.classList.add('btn-dark', 'btn', 'mt-3', 'position-absolute', 'bottom-0', 'end-0')
+    showMorePageBtn.classList.add('btn-dark', 'btn', 'position-absolute', 'end-50')
     showMorePageBtn.innerText = "Load Episodes"
     setTimeout(() => { contentSidebarDivCol.appendChild(showMorePageBtn) }, 0.5 * 1000)
 }
@@ -58,7 +58,6 @@ const fetchEpisodesData = (page) => {
         fetch(`${episodesUrl}?page=${page}`)
             .then(response => response.json())
             .then(data => {
-                console.log(data.results)
                 let episodes = data.results
                 displayEpisodes(episodes)
             })
@@ -73,6 +72,9 @@ const displayEpisodes = (episodes) => {
     episodesUl.classList.add('list-group')
 
     episodes.forEach(episode => {
+        //Empty the content div
+        contentBodyDivCol.innerHTML = ""
+
         const episodeLi = document.createElement('li')
         episodeLi.classList.add('list-group-item', 'episode-item')
         const episodeLiLink = document.createElement('a')
@@ -88,7 +90,6 @@ const displayEpisodes = (episodes) => {
         episodeLiLink.addEventListener('click', (e) => {
             let episodeUrl = e.target.getAttribute('url')
 
-            console.log(episodeUrl)
             getEpisode(episodeUrl)
         })
     })
@@ -106,6 +107,9 @@ const getEpisode = (episodeUrl) => {
 }
 
 const showEpisode = (episode) => {
+    //clear the main div
+    contentBodyDivCol.innerHTML = ""
+
     const episodeInfo = document.createElement('h5')
     episodeInfo.classList.add('py-2')
     episodeInfo.innerText = `${episode.name} `
@@ -121,6 +125,7 @@ const showEpisode = (episode) => {
 
 
 const showEpisodeCharacters = (characters) => {
+
     //Setup bootstrap card layout
     const cardRow = document.createElement('div')
     cardRow.classList.add('row', 'mt-2')
@@ -129,7 +134,6 @@ const showEpisodeCharacters = (characters) => {
         fetch(character)
             .then(response => response.json())
             .then(character => {
-                console.log(character)
                 const cardCol = document.createElement('div')
                 cardCol.classList.add('col-3')
                 const cardLink = document.createElement('a')
@@ -164,7 +168,6 @@ const showEpisodeCharacters = (characters) => {
 
                 //Add eventlistener to the card
                 cardLink.addEventListener('click', (e) => {
-                    console.log(e.target.id)
                     showCharacter(e.target.id)
                 })
             })
@@ -173,9 +176,9 @@ const showEpisodeCharacters = (characters) => {
 }
 
 const showCharacter = (characterId) => {
+
     //clear the main div
     contentBodyDivCol.innerHTML = ""
-
     const thisCharacterUrl = `${characterUrl}/${characterId}`
 
     //fetch the charater
@@ -235,7 +238,6 @@ const showCharacter = (characterId) => {
             cardDiv.appendChild(cardEpisodesRow)
 
             contentBodyDivCol.appendChild(cardDiv)
-            console.log(character)
 
             //Show character episodes
             character.episode.forEach(episode => {
@@ -274,11 +276,10 @@ const waitOneSecond = (doSomething) => {
 
 const setUpShowMorePageBtn = () => {
     const showMorePageBtn = document.querySelector('#show-more-page-btn')
-    console.log('show morepage!')
+
     showMorePageBtn.addEventListener('click', () => {
-        console.log('show more page!')
+
         page = page + 1
-        console.log(page)
 
         if (page <= 3) {
             waitOneSecond(setUpShowMorePageBtn)

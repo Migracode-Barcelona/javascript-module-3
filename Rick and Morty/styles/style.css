@@ -1,4 +1,3 @@
-/* #show-more-page-btn {
-    position: absolute;
-    right: 167px
-} */
+#show-more-page-btn {
+    bottom: -4rem;
+}
