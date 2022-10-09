@@ -89,7 +89,6 @@ const displayEpisodes = (episodes) => {
         //add eventlistner to each list item
         episodeLiLink.addEventListener('click', (e) => {
             let episodeUrl = e.target.getAttribute('url')
-
             getEpisode(episodeUrl)
         })
     })
@@ -119,12 +118,12 @@ const showEpisode = (episode) => {
     contentBodyDivCol.appendChild(episodeInfo)
     contentBodyDivCol.appendChild(episodeInfoBody)
     let characters = episode.characters
-    showEpisodeCharacters(characters)
+    showCharacters(characters)
 }
 
 
 
-const showEpisodeCharacters = (characters) => {
+const showCharacters = (characters) => {
 
     //Setup bootstrap card layout
     const cardRow = document.createElement('div')
@@ -185,8 +184,6 @@ const showCharacter = (characterId) => {
     fetch(thisCharacterUrl)
         .then(response => response.json())
         .then(character => {
-
-
             // Set up bootstrap card layout
 
             //card div
@@ -219,10 +216,20 @@ const showCharacter = (characterId) => {
             const cardBodyContent = document.createElement('p')
             cardBodyContent.classList.add('card-text', 'text-muted', 'fw-sm')
 
+            //Add link to character origin
+            const characterOriginLink = document.createElement('a')
+            characterOriginLink.href = "#"
+            characterOriginLink.classList.add('link-secondary')
+            const cardBodyContentOrigin = document.createElement('p')
+            cardBodyContentOrigin.classList.add('card-text', 'text-muted', 'fw-normal', 'py-2')
+            cardBodyContentOrigin.setAttribute('url', character.origin.url)
+            cardBodyContentOrigin.innerText = `Origin:${character.origin.name}`
+            characterOriginLink.appendChild(cardBodyContentOrigin)
             //show character info
-            cardBodyContent.innerText = `${character.status} | ${character.species} | ${character.gender} | ${character.origin.name}`
+            cardBodyContent.innerText = `${character.status} | ${character.species} | ${character.gender}`
 
             cardTitleInfoBody.appendChild(cardBodyTitle)
+            cardTitleInfoBody.appendChild(characterOriginLink)
             cardTitleInfoBody.appendChild(cardBodyContent)
             cardTitleInfoCol.appendChild(cardTitleInfoBody)
 
@@ -238,6 +245,13 @@ const showCharacter = (characterId) => {
             cardDiv.appendChild(cardEpisodesRow)
 
             contentBodyDivCol.appendChild(cardDiv)
+
+            //Add EventListener to origin location
+            characterOriginLink.addEventListener('click', (e) => {
+                const originUrl = e.target.getAttribute('url')
+                getLocation(originUrl)
+
+            })
 
             //Show character episodes
             character.episode.forEach(episode => {
@@ -270,8 +284,34 @@ const showCharacter = (characterId) => {
         })
 }
 
+const getLocation = (originUrl) => {
+    console.log(originUrl)
+    if (originUrl) {
+        fetch(originUrl)
+            .then(response => response.json())
+            .then(location => {
+                showLocation(location)
+            })
+    }
+
+}
+const showLocation = (location) => {
+    //clear the main div
+    contentBodyDivCol.innerHTML = ""
+
+    //setup bootstrap layout
+    const locationName = document.createElement('h5')
+    locationName.classList.add('py-2')
+    locationName.innerText = `${location.name} `
+    const locationInfo = document.createElement('p')
+    locationInfo.classList.add('text-muted', 'fw-light', 'py-2')
+    locationInfo.innerText = `${location.type} | ${location.dimension}`
+    contentBodyDivCol.appendChild(locationName)
+    contentBodyDivCol.appendChild(locationInfo)
+    showCharacters(location.residents)
 
 
+}
 
 //load the first page 
 fetchEpisodesData(1)
