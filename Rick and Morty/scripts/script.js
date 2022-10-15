@@ -16,32 +16,44 @@ titleDivRow.appendChild(titleDiveCol)
 const rootDiv = document.getElementById("root")
 rootDiv.classList.add('container')
 rootDiv.appendChild(titleDivRow)
+
 //1.0.2 bootstrap layout sidebar and body
 
 const contentDivRow = document.createElement('div')
 contentDivRow.classList.add('row', 'mt-3')
 
 const contentSidebarDivCol = document.createElement('div')
-contentSidebarDivCol.classList.add('col-4', 'position-relative')
+contentSidebarDivCol.classList.add('col-4', 'side-bar')
 
 const contentBodyDivCol = document.createElement('div')
-contentBodyDivCol.classList.add('col-8')
+contentBodyDivCol.classList.add('col-8', 'content-body')
 
 contentDivRow.appendChild(contentSidebarDivCol)
 contentDivRow.appendChild(contentBodyDivCol)
 rootDiv.appendChild(contentDivRow)
 
 
+const showEpisodesButtonDiv = document.createElement('div')
+showEpisodesButtonDiv.classList.add('py-3')
+
 const createShowMoreBtn = () => {
-    contentDivRow.appendChild(contentSidebarDivCol)
-    //1.2.x Sidebar button
+
+    //Create button div
+
+    contentSidebarDivCol.appendChild(showEpisodesButtonDiv)
+
+    //Creat button
     const showMorePageBtn = document.createElement('button')
     showMorePageBtn.setAttribute('id', 'show-more-page-btn')
-    showMorePageBtn.classList.add('btn-dark', 'btn', 'position-absolute', 'end-50')
+    showMorePageBtn.classList.add('btn-dark', 'btn')
     showMorePageBtn.innerText = "Load Episodes"
-    setTimeout(() => { contentSidebarDivCol.appendChild(showMorePageBtn) }, 0.5 * 1000)
+
+    showEpisodesButtonDiv.appendChild(showMorePageBtn)
+
 }
+
 createShowMoreBtn()
+
 
 
 //1.2 Sidebar
@@ -61,9 +73,14 @@ const fetchEpisodesData = (page) => {
 
 
 const displayEpisodes = (episodes) => {
+    //create list div
+    const episodeListsDiv = document.createElement('div')
+    contentSidebarDivCol.insertBefore(episodeListsDiv, showEpisodesButtonDiv)
+
     //create html list elements
     const episodesUl = document.createElement('ul')
     episodesUl.classList.add('list-group')
+    episodeListsDiv.appendChild(episodesUl)
 
     episodes.forEach(episode => {
         //Empty the content div
@@ -86,7 +103,7 @@ const displayEpisodes = (episodes) => {
             getEpisode(episodeUrl)
         })
     })
-    contentSidebarDivCol.appendChild(episodesUl)
+
 
 }
 
@@ -114,8 +131,6 @@ const showEpisode = (episode) => {
     let characters = episode.characters
     showCharacters(characters)
 }
-
-
 
 const showCharacters = (characters) => {
 
@@ -309,7 +324,6 @@ const showLocation = (location) => {
 
 //load the first page 
 fetchEpisodesData(1)
-
 
 const cleanList = () => {
     contentSidebarDivCol.innerHTML = ''
