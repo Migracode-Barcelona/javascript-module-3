@@ -92,15 +92,13 @@ const displayEpisodes = (episodes) => {
         episodeLiLink.classList.add('link-dark')
         episodeLiLink.innerText = `Episode: ${episode.episode}:${episode.name}`
         episodeLiLink.setAttribute('id', `episode-${episode.id}`)
-        episodeLiLink.setAttribute('url', `${episode.url}`)
 
         episodeLiLink.setAttribute('href', '#')
         episodeLi.appendChild(episodeLiLink)
         episodesUl.appendChild(episodeLi)
         //add eventlistner to each list item
         episodeLiLink.addEventListener('click', (e) => {
-            const episodeUrl = e.target.getAttribute('url')
-            getEpisode(episodeUrl)
+            getEpisode(episode.url)
         })
     })
 
@@ -176,7 +174,7 @@ const showCharacters = (characters) => {
 
                 //Add eventlistener to the card
                 cardLink.addEventListener('click', (e) => {
-                    showCharacter(e.target.id)
+                    showCharacter(character.id)
                 })
             })
     })
@@ -231,7 +229,7 @@ const showCharacter = (characterId) => {
             characterOriginLink.classList.add('link-info')
             const cardBodyContentOrigin = document.createElement('p')
             cardBodyContentOrigin.classList.add('card-text', 'fw-normal', 'py-2')
-            cardBodyContentOrigin.setAttribute('url', character.origin.url)
+
             cardBodyContentOrigin.innerText = `Origin:${character.origin.name}`
             characterOriginLink.appendChild(cardBodyContentOrigin)
             //show character info
@@ -257,8 +255,7 @@ const showCharacter = (characterId) => {
 
             //Add EventListener to origin location
             characterOriginLink.addEventListener('click', (e) => {
-                const originUrl = e.target.getAttribute('url')
-                getLocation(originUrl)
+                getLocation(character.origin.url)
 
             })
 
