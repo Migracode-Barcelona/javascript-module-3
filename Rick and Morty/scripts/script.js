@@ -1,7 +1,7 @@
-url = 'https://rickandmortyapi.com/api'
-characterUrl = 'https://rickandmortyapi.com/api/character'
-episodesUrl = "https://rickandmortyapi.com/api/episode"
-locationsUrl = "https://rickandmortyapi.com/api/location"
+const url = 'https://rickandmortyapi.com/api'
+const characterUrl = 'https://rickandmortyapi.com/api/character'
+const episodesUrl = "https://rickandmortyapi.com/api/episode"
+const locationsUrl = "https://rickandmortyapi.com/api/location"
 
 
 
@@ -57,14 +57,14 @@ createShowMoreBtn()
 
 
 //1.2 Sidebar
-let page = 1
+const page = 1
 
 const fetchEpisodesData = (page) => {
     if (page <= 3) {
         fetch(`${episodesUrl}?page=${page}`)
             .then(response => response.json())
             .then(data => {
-                let episodes = data.results
+                const episodes = data.results
                 displayEpisodes(episodes)
             })
     }
@@ -99,7 +99,7 @@ const displayEpisodes = (episodes) => {
         episodesUl.appendChild(episodeLi)
         //add eventlistner to each list item
         episodeLiLink.addEventListener('click', (e) => {
-            let episodeUrl = e.target.getAttribute('url')
+            const episodeUrl = e.target.getAttribute('url')
             getEpisode(episodeUrl)
         })
     })
@@ -128,7 +128,7 @@ const showEpisode = (episode) => {
     episodeInfoBody.innerText = `${episode.air_date} | ${episode.episode}`
     contentBodyDivCol.appendChild(episodeInfo)
     contentBodyDivCol.appendChild(episodeInfoBody)
-    let characters = episode.characters
+    const characters = episode.characters
     showCharacters(characters)
 }
 
