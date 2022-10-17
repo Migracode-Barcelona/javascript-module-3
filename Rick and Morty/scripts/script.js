@@ -1,8 +1,14 @@
+// Save Urls into global variables 
 const url = 'https://rickandmortyapi.com/api'
 const characterUrl = 'https://rickandmortyapi.com/api/character'
-const episodesUrl = "https://rickandmortyapi.com/api/episode"
+let episodesUrl = "https://rickandmortyapi.com/api/episode"
 const locationsUrl = "https://rickandmortyapi.com/api/location"
 
+//Utility functions
+const getResponse = (res) => { return res.json() }
+const processJSON = (json) => {
+    return json
+}
 
 
 // Step 1 create the web structure
@@ -36,43 +42,27 @@ rootDiv.appendChild(contentDivRow)
 const showEpisodesButtonDiv = document.createElement('div')
 showEpisodesButtonDiv.classList.add('py-3')
 
-const createShowMoreBtn = () => {
 
-    //Create button div
+// Step 1.1.0 create the show more button
+//Create button div
 
-    contentSidebarDivCol.appendChild(showEpisodesButtonDiv)
+contentSidebarDivCol.appendChild(showEpisodesButtonDiv)
 
-    //Creat button
-    const showMorePageBtn = document.createElement('button')
-    showMorePageBtn.setAttribute('id', 'show-more-page-btn')
-    showMorePageBtn.classList.add('btn-dark', 'btn')
-    showMorePageBtn.innerText = "Load Episodes"
+//Creat button
+const showMorePageBtn = document.createElement('button')
+showMorePageBtn.setAttribute('id', 'show-more-page-btn')
+showMorePageBtn.classList.add('btn-dark', 'btn')
+showMorePageBtn.innerText = "Load Episodes"
 
-    showEpisodesButtonDiv.appendChild(showMorePageBtn)
-
-}
-
-createShowMoreBtn()
+//Append button element to the div
+showEpisodesButtonDiv.appendChild(showMorePageBtn)
 
 
 
-//1.2 Sidebar
-const page = 1
+//Step 2 Display episode lists in the sidebar 
 
-const fetchEpisodesData = (page) => {
-    if (page <= 3) {
-        fetch(`${episodesUrl}?page=${page}`)
-            .then(response => response.json())
-            .then(data => {
-                const episodes = data.results
-                displayEpisodes(episodes)
-            })
-    }
-
-}
-
-
-const displayEpisodes = (episodes) => {
+// 2.1 Fetch episodes data and display them in the sidebar 
+const displayEpisodeLists = () => {
     //create list div
     const episodeListsDiv = document.createElement('div')
     contentSidebarDivCol.insertBefore(episodeListsDiv, showEpisodesButtonDiv)
@@ -82,39 +72,46 @@ const displayEpisodes = (episodes) => {
     episodesUl.classList.add('list-group')
     episodeListsDiv.appendChild(episodesUl)
 
-    episodes.forEach(episode => {
-        //Empty the content div
-        contentBodyDivCol.innerHTML = ""
+    //Fetch episodes data
+    if (episodesUrl) {
+        fetch(episodesUrl)
+            .then(getResponse)
+            .then(data => {
+                const episodes = data.results
+                episodes.forEach(episode => {
+                    //Empty the content div
+                    contentBodyDivCol.innerHTML = ""
 
-        const episodeLi = document.createElement('li')
-        episodeLi.classList.add('list-group-item', 'episode-item')
-        const episodeLiLink = document.createElement('a')
-        episodeLiLink.classList.add('link-dark')
-        episodeLiLink.innerText = `Episode: ${episode.episode}:${episode.name}`
-        episodeLiLink.setAttribute('id', `episode-${episode.id}`)
+                    const episodeLi = document.createElement('li')
+                    episodeLi.classList.add('list-group-item', 'episode-item')
+                    const episodeLiLink = document.createElement('a')
+                    episodeLiLink.classList.add('link-dark')
+                    episodeLiLink.innerText = `Episode: ${episode.episode}:${episode.name}`
+                    episodeLiLink.setAttribute('id', `episode-${episode.id}`)
 
-        episodeLiLink.setAttribute('href', '#')
-        episodeLi.appendChild(episodeLiLink)
-        episodesUl.appendChild(episodeLi)
-        //add eventlistner to each list item
-        episodeLiLink.addEventListener('click', (e) => {
-            getEpisode(episode.url)
-        })
-    })
-
-
+                    episodeLiLink.setAttribute('href', '#')
+                    episodeLi.appendChild(episodeLiLink)
+                    episodesUl.appendChild(episodeLi)
+                    //add eventlistner to each list item
+                    episodeLiLink.addEventListener('click', (e) => {
+                        episodeData = fetchData(episode.url)
+                        displayEpisode(episodeData)
+                    })
+                })
+                episodesUrl = data.info.next
+            })
+    }
 }
+//Load the first page of episode lists
+displayEpisodeLists()
 
-const getEpisode = (episodeUrl) => {
-    fetch(episodeUrl)
-        .then(response => response.json())
-        .then(episode => {
-            showEpisode(episode)
-        })
+//Set up show more button
+showMorePageBtn.addEventListener('click', () => {
+    displayEpisodeLists()
+})
 
-}
 
-const showEpisode = (episode) => {
+const displayEpisode = (episode) => {
     //clear the main div
     contentBodyDivCol.innerHTML = ""
 
@@ -319,8 +316,7 @@ const showLocation = (location) => {
 
 }
 
-//load the first page 
-fetchEpisodesData(1)
+
 
 const cleanList = () => {
     contentSidebarDivCol.innerHTML = ''
@@ -329,22 +325,5 @@ const cleanList = () => {
 const waitOneSecond = (doSomething) => {
     setTimeout(doSomething, 1 * 1000)
 }
-
-const setUpShowMorePageBtn = () => {
-    const showMorePageBtn = document.querySelector('#show-more-page-btn')
-
-    showMorePageBtn.addEventListener('click', () => {
-
-        page = page + 1
-
-        if (page <= 3) {
-            waitOneSecond(setUpShowMorePageBtn)
-            // cleanList()
-            fetchEpisodesData(page)
-        }
-    })
-}
-
-waitOneSecond(setUpShowMorePageBtn)
 
 
