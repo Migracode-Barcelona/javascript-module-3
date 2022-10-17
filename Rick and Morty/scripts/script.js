@@ -1,15 +1,10 @@
 // Save Urls into global variables 
 const url = 'https://rickandmortyapi.com/api'
-const characterUrl = 'https://rickandmortyapi.com/api/character'
 let episodesUrl = "https://rickandmortyapi.com/api/episode"
 const locationsUrl = "https://rickandmortyapi.com/api/location"
 
 //Utility functions
 const getResponse = (res) => { return res.json() }
-const processJSON = (json) => {
-    return json
-}
-
 
 // Step 1 create the web structure
 
@@ -29,10 +24,10 @@ const contentDivRow = document.createElement('div')
 contentDivRow.classList.add('row', 'mt-3')
 
 const contentSidebarDivCol = document.createElement('div')
-contentSidebarDivCol.classList.add('col-4', 'side-bar')
+contentSidebarDivCol.classList.add('col-3', 'side-bar')
 
 const contentBodyDivCol = document.createElement('div')
-contentBodyDivCol.classList.add('col-8', 'content-body')
+contentBodyDivCol.classList.add('col-9', 'content-body')
 
 contentDivRow.appendChild(contentSidebarDivCol)
 contentDivRow.appendChild(contentBodyDivCol)
@@ -86,7 +81,7 @@ const displayEpisodeLists = () => {
                     episodeLi.classList.add('list-group-item', 'episode-item')
                     const episodeLiLink = document.createElement('a')
                     episodeLiLink.classList.add('link-dark')
-                    episodeLiLink.innerText = `Episode: ${episode.episode}:${episode.name}`
+                    episodeLiLink.innerText = `Episode ${episode.episode}`
                     episodeLiLink.setAttribute('id', `episode-${episode.id}`)
 
                     episodeLiLink.setAttribute('href', '#')
@@ -94,8 +89,7 @@ const displayEpisodeLists = () => {
                     episodesUl.appendChild(episodeLi)
                     //add eventlistner to each list item
                     episodeLiLink.addEventListener('click', (e) => {
-                        episodeData = fetchData(episode.url)
-                        displayEpisode(episodeData)
+                        displayEpisode(episode.url)
                     })
                 })
                 episodesUrl = data.info.next
@@ -111,23 +105,32 @@ showMorePageBtn.addEventListener('click', () => {
 })
 
 
-const displayEpisode = (episode) => {
+// Step 3 Display the episode that is clicked by the user
+const displayEpisode = (episodeUrl) => {
     //clear the main div
     contentBodyDivCol.innerHTML = ""
 
-    const episodeInfo = document.createElement('h5')
-    episodeInfo.classList.add('py-2')
-    episodeInfo.innerText = `${episode.name} `
-    const episodeInfoBody = document.createElement('p')
-    episodeInfoBody.classList.add('text-muted', 'fw-light', 'py-2')
-    episodeInfoBody.innerText = `${episode.air_date} | ${episode.episode}`
-    contentBodyDivCol.appendChild(episodeInfo)
-    contentBodyDivCol.appendChild(episodeInfoBody)
-    const characters = episode.characters
-    showCharacters(characters)
+    //Fetch episode data
+    fetch(episodeUrl)
+        .then(getResponse)
+        .then(data => {
+            const episode = data
+
+            const episodeInfo = document.createElement('h5')
+            episodeInfo.classList.add('py-2')
+            episodeInfo.innerText = `${episode.name} `
+            const episodeInfoBody = document.createElement('p')
+            episodeInfoBody.classList.add('text-muted', 'fw-light', 'py-2')
+            episodeInfoBody.innerText = `${episode.air_date} | ${episode.episode}`
+            contentBodyDivCol.appendChild(episodeInfo)
+            contentBodyDivCol.appendChild(episodeInfoBody)
+            const characters = episode.characters
+            displayCharacters(characters)
+        })
+
 }
 
-const showCharacters = (characters) => {
+const displayCharacters = (characters) => {
 
     //Setup bootstrap card layout
     const cardRow = document.createElement('div')
@@ -137,6 +140,7 @@ const showCharacters = (characters) => {
         fetch(character)
             .then(response => response.json())
             .then(character => {
+                console.log(character)
                 const cardCol = document.createElement('div')
                 cardCol.classList.add('col-3')
                 const cardLink = document.createElement('a')
@@ -171,22 +175,22 @@ const showCharacters = (characters) => {
 
                 //Add eventlistener to the card
                 cardLink.addEventListener('click', (e) => {
-                    showCharacter(character.id)
+                    const characterUrl = character.url
+                    displayCharacter(characterUrl)
                 })
             })
     })
     contentBodyDivCol.appendChild(cardRow)
 }
 
-const showCharacter = (characterId) => {
+const displayCharacter = (characterUrl) => {
 
     //clear the main div
     contentBodyDivCol.innerHTML = ""
-    const thisCharacterUrl = `${characterUrl}/${characterId}`
 
-    //fetch the charater
-    fetch(thisCharacterUrl)
-        .then(response => response.json())
+    //fetch the charater data
+    fetch(characterUrl)
+        .then(getResponse)
         .then(character => {
             // Set up bootstrap card layout
 
@@ -252,7 +256,7 @@ const showCharacter = (characterId) => {
 
             //Add EventListener to origin location
             characterOriginLink.addEventListener('click', (e) => {
-                getLocation(character.origin.url)
+                displayLocation(character.origin.url)
 
             })
 
@@ -279,7 +283,7 @@ const showCharacter = (characterId) => {
                 //add EventListener to each episode
                 episodelink.addEventListener('click', (e) => {
                     const thisEpisodeUrl = e.target.getAttribute('url')
-                    getEpisode(thisEpisodeUrl)
+                    displayEpisode(thisEpisodeUrl)
                 })
 
                 cardEpisodesRow.appendChild(episodeCol)
@@ -287,43 +291,27 @@ const showCharacter = (characterId) => {
         })
 }
 
-const getLocation = (originUrl) => {
-    console.log(originUrl)
-    if (originUrl) {
-        fetch(originUrl)
-            .then(response => response.json())
-            .then(location => {
-                showLocation(location)
-            })
-    }
-
-}
-const showLocation = (location) => {
+const displayLocation = (originUrl) => {
     //clear the main div
     contentBodyDivCol.innerHTML = ""
 
-    //setup bootstrap layout
-    const locationName = document.createElement('h5')
-    locationName.classList.add('py-2')
-    locationName.innerText = `${location.name} `
-    const locationInfo = document.createElement('p')
-    locationInfo.classList.add('text-muted', 'fw-light', 'py-2')
-    locationInfo.innerText = `${location.type} | ${location.dimension}`
-    contentBodyDivCol.appendChild(locationName)
-    contentBodyDivCol.appendChild(locationInfo)
-    showCharacters(location.residents)
-
-
-}
-
-
-
-const cleanList = () => {
-    contentSidebarDivCol.innerHTML = ''
-}
-
-const waitOneSecond = (doSomething) => {
-    setTimeout(doSomething, 1 * 1000)
+    //fetch location data
+    if (originUrl) {
+        fetch(originUrl)
+            .then(getResponse)
+            .then(location => {
+                //setup bootstrap layout
+                const locationName = document.createElement('h5')
+                locationName.classList.add('py-2')
+                locationName.innerText = `${location.name} `
+                const locationInfo = document.createElement('p')
+                locationInfo.classList.add('text-muted', 'fw-light', 'py-2')
+                locationInfo.innerText = `${location.type} | ${location.dimension}`
+                contentBodyDivCol.appendChild(locationName)
+                contentBodyDivCol.appendChild(locationInfo)
+                displayCharacters(location.residents)
+            })
+    }
 }
 
 
