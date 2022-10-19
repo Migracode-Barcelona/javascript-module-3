@@ -39,8 +39,8 @@ body {
 }
 
 .main-cointainer {
-    display: flex;
-    flex-direction: column;
+    /* display: flex;
+    flex-direction: column; */
     background-color: rgb(113, 150, 122);
     width: 90%;
     text-align: center;
@@ -79,5 +79,18 @@ body {
 }
 
 hr {
-    border: 5px solid greenyellow;
+    border: 3px solid #50b0c8;
 }
+
+.card-character-list{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.card-info-episode{
+    margin: 70px 35px 0 35px ;
+}
+

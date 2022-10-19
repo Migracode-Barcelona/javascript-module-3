@@ -44,9 +44,17 @@ function sidebar(){
                         createCard(episode.name, episode.air_date, episode.episode, episode.characters)
                     })
                 });
-            });
+                    sidebarDiv.appendChild(moreEpisodesButton);
+        })
+        
+        .catch(
+            reason => {
+                console.log(reason.toString())
+            }
+        )
 }
 sidebar();
+
 
 //MAIN CONTAINER
 const mainContainer = document.createElement("div");
@@ -127,7 +135,7 @@ function renderCharacters(charactersURLs) {
             imageCharacter.src = character.image;
             containerCharacter.appendChild(imageCharacter);
 
-            const nameCharacter = document.createElement("p");
+            const nameCharacter = document.createElement("h2");
             nameCharacter.innerText = character.name;
             containerCharacter.appendChild(nameCharacter);
 
@@ -153,7 +161,7 @@ function createCardCharacterInfo(character) {
     const imageCharacter = document.createElement("img");
     imageCharacter.src = character.image;
 
-    const nameCharacter = document.createElement("p");
+    const nameCharacter = document.createElement("h2");
     nameCharacter.innerText = character.name;
     cardCharacterInfo.appendChild(nameCharacter);
 
@@ -164,9 +172,10 @@ function createCardCharacterInfo(character) {
     cardCharacterInfo.appendChild(imageCharacter);
     mainContainer.appendChild(cardCharacterInfo);
 
-    mainContainer.appendChild(document.createElement('hr'));
+    mainContainer.appendChild(document.createElement('HR'));
 
     const cardCharacterList = document.createElement('div');
+    cardCharacterList.classList.add("card-character-list")
     mainContainer.appendChild(cardCharacterList);
 
     character.episode.forEach( episodeURL => {
@@ -175,13 +184,16 @@ function createCardCharacterInfo(character) {
             return result.json()
         })
         .then(episodeInfo => {
+                    const cardInfoEpisode = document.createElement("div");
+                    cardInfoEpisode.classList.add("card-info-episode")
+                    cardCharacterList.appendChild(cardInfoEpisode);
                     const episodeId = document.createElement('h2');
                     episodeId.innerText = `Episode ${episodeInfo.id}`;
-                    cardCharacterList.appendChild(episodeId);
+                    cardInfoEpisode.appendChild(episodeId);
 
                     const episodeCode = document.createElement('p');
                     episodeCode.innerText = episodeInfo.episode;
-                    cardCharacterList.appendChild(episodeCode);
+                    cardInfoEpisode.appendChild(episodeCode);
         })
     })
 }
